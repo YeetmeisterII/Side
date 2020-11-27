@@ -6,10 +6,7 @@ public class Stats {
     protected Integer goldValue, expValue;
 
 
-    public Stats(Integer strength,
-                 Integer defence,
-                 Integer charisma, Integer hitPoints,
-                 Integer goldValue,
+    public Stats(Integer strength, Integer defence, Integer charisma, Integer hitPoints, Integer goldValue,
                  Integer expValue) {
         this.strength = this.currentStrength = strength;
         this.defence = this.currentDefence = defence;
@@ -27,6 +24,10 @@ public class Stats {
         return defence;
     }
 
+    public Integer getCharisma() {
+        return charisma;
+    }
+
     public Integer getHitPoints() {
         return hitPoints;
     }
@@ -37,6 +38,10 @@ public class Stats {
 
     public Integer getCurrentDefence() {
         return currentDefence;
+    }
+
+    public Integer getCurrentCharisma() {
+        return currentCharisma;
     }
 
     public Integer getCurrentHitPoints() {
@@ -51,43 +56,75 @@ public class Stats {
         defence += value;
     }
 
+    public void addCharisma(Integer value) {
+        charisma += value;
+    }
+
     public void addHitPoints(Integer value) {
         hitPoints += value;
     }
 
     public void addCurrentStrength(Integer value) {
-        currentStrength += value;
+        if (strength < (currentStrength + value)) {
+            currentStrength = strength;
+        } else {
+            currentStrength += value;
+        }
     }
 
     public void addCurrentDefence(Integer value) {
-        currentDefence += value;
+        if (defence < (currentDefence + value)) {
+            currentDefence = defence;
+        } else {
+            currentDefence += value;
+        }
+    }
+
+    public void addCurrentCharisma(Integer value) {
+        if (charisma < (currentCharisma + value)) {
+            currentCharisma = charisma;
+        } else {
+            currentCharisma += value;
+        }
     }
 
     public void addCurrentHitPoints(Integer value) {
-        currentHitPoints += value;
+        if (hitPoints < (currentHitPoints + value)) {
+            currentHitPoints = hitPoints;
+        } else {
+            currentHitPoints += value;
+        }
     }
 
-    public void reduceStrength(Integer value) {
-        strength += value;
+    public void subtractStrength(Integer value) {
+        strength -= value;
     }
 
-    public void reduceDefence(Integer value) {
-        defence += value;
+    public void subtractDefence(Integer value) {
+        defence -= value;
     }
 
-    public void reduceHitPoints(Integer value) {
-        hitPoints += value;
+    public void subtractCharisma(Integer value) {
+        charisma -= value;
     }
 
-    public void reduceCurrentStrength(Integer value) {
-        currentStrength += value;
+    public void subtractHitPoints(Integer value) {
+        hitPoints -= value;
     }
 
-    public void reduceCurrentDefence(Integer value) {
-        currentDefence += value;
+    public void subtractCurrentStrength(Integer value) {
+        currentStrength -= value;
     }
 
-    public void reduceCurrentHitPoints(Integer value) {
-        currentHitPoints += value;
+    public void subtractCurrentDefence(Integer value) {
+        currentDefence -= value;
+    }
+
+    public void subtractCurrentCharisma(Integer value) {
+        currentCharisma -= value;
+    }
+
+    public void subtractCurrentHitPoints(Integer value) {
+        currentHitPoints -= value;
     }
 }
