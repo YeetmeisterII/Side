@@ -1,11 +1,11 @@
-package combat;
+package combat.actions;
 
 import creatures.Creature;
 
-public abstract class CombatAction {
-    final Creature performer, target;
+public abstract class Action {
+    protected final Creature performer, target;
 
-    public CombatAction(Creature performer, Creature target) {
+    public Action(Creature performer, Creature target) {
         this.performer = performer;
         this.target = target;
     }
