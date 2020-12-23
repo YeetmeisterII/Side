@@ -1,8 +1,7 @@
 package combat;
 
 import combat.Constants.HitTypes;
-import combat.actions.Attack;
-import combat.actions.Block;
+import combat.actions.*;
 import combat.results.AttackResult;
 import combat.results.BlockResult;
 import creatures.Creature;
@@ -17,9 +16,9 @@ public class CombatCalculator {
         return ThreadLocalRandom.current().nextInt(1, 21);
     }
 
-    private AttackResult simulateAttack(Attack attack, boolean isBlocking) {
+    private AttackResult simulateAttack(Attack attack, Action opponentAction) {
         int d20, attackScore, weaponDamage;
-        boolean defenceLessThanAttackScore, defenceDoubledLessThanAttackScore;
+        boolean defenceLessThanAttackScore, defenceDoubledLessThanAttackScore, isBlocking;
         Creature attacker, defender;
         Weapon weaponUsed;
         HitTypes hitType;
@@ -28,6 +27,7 @@ public class CombatCalculator {
         attacker = attack.getPerformer();
         defender = attack.getTarget();
         weaponUsed = attack.getWeaponUsed();
+        isBlocking = (opponentAction.getClass() == Block.class);
 
 
         attackScore = d20 + attacker.getStats().getCurrentStrength();
@@ -53,45 +53,14 @@ public class CombatCalculator {
         } else {
             weaponDamage = weaponUsed.attack();
         }
-
         return new AttackResult(attacker, defender, hitType, weaponDamage);
     }
 
-    private ResultsContainer simulateCombatRound(Attack playerAttack, Attack enemyAttack) {
-        AttackResult playerResult, enemyResult;
-
-        playerResult = simulateAttack(playerAttack, false);
-        enemyResult = simulateAttack(enemyAttack, false);
-        Executor.run(playerResult, enemyResult);
-        return new ResultsContainer(playerResult, enemyResult);
+    private <T extends Action> AttackResult simulateCombatRound(Attack performedAction, T opponentAction) {
+        return simulateAttack(performedAction, opponentAction);
     }
 
-    private ResultsContainer simulateCombatRound(Attack playerAttack, Block enemyBlock) {
-        AttackResult playerResult;
-        BlockResult enemyResult;
-
-        playerResult = simulateAttack(playerAttack, true);
-        enemyResult = new BlockResult(enemyBlock.getPerformer());
-        Executor.run(playerResult, enemyResult);
-        return new ResultsContainer(playerResult, enemyResult);
-    }
-
-    private ResultsContainer simulateCombatRound(Block playerBlock, Attack enemyAttack) {
-        AttackResult enemyResult;
-        BlockResult playerResult;
-
-        playerResult = new BlockResult(playerBlock.getPerformer());
-        enemyResult = simulateAttack(enemyAttack, true);
-        Executor.run(playerResult, enemyResult);
-        return new ResultsContainer(playerResult, enemyResult);
-    }
-
-    private ResultsContainer simulateCombatRound(Block playerBlock, Block enemyBlock) {
-        BlockResult playerResult, enemyResult;
-
-        playerResult = new BlockResult(playerBlock.getPerformer());
-        enemyResult = new BlockResult(enemyBlock.getPerformer());
-        Executor.run(playerResult, enemyResult);
-        return new ResultsContainer(playerResult, enemyResult);
+    private BlockResult simulateCombatRound(Block performedAction, Block opponentAction) {
+        return new BlockResult(performedAction.getPerformer());
     }
 }
